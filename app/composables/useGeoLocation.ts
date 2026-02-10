@@ -1,49 +1,47 @@
-/**
- * useGeoLocation
- * 获取用户地理位置信息的组合式函数
- */
-import type { LocationData, UseGeoLocationReturn } from '~/types';
+import type { LocationData, UseGeoLocationReturn } from '~/types'
 
 export const useGeoLocation = (): UseGeoLocationReturn => {
-    // 保持 useState 确保 SSR 状态同步
-    const locationData = useState<LocationData>('geo-location-data', () => ({
-        ip: '',
-        location: '',
-        isp: '',
-    }));
+  // 保持 useState 确保 SSR 状态同步
+  const locationData = useState<LocationData>('geo-location-data', () => ({
+    ip: '',
+    location: '',
+    isp: '',
+  }))
 
-    const isFetching = useState('geo-location-fetching', () => false);
+  const isFetching = useState('geo-location-fetching', () => false)
 
-    const fetchGeo = async () => {
-        // 逻辑锁：已有 IP 或正在请求中则跳过
-        if (locationData.value.ip || isFetching.value) return;
+  const fetchGeo = async () => {
+    // 逻辑锁：已有 IP 或正在请求中则跳过
+    if (locationData.value.ip || isFetching.value) return
 
-        isFetching.value = true;
+    isFetching.value = true
 
-        try {
-            // 使用 $fetch 请求我们刚写好的 ip.get.ts 接口
-            const data = await $fetch<{ ip: string; location: string; isp: string }>('/api/ip');
+    try {
+      const data = await $fetch<{ ip: string, location: string, isp: string }>('/api/ip')
 
-            // 赋值逻辑：优先使用 location，如果没有则回退显示 IP
-            locationData.value = {
-                ip: data.ip || '未知IP',
-                location: data.location || '未知位置',
-                isp: data.isp || '未知运营商',
-            };
-        } catch (error) {
-            // 这里的兜底很重要，防止前端因为接口 500 而挂掉
-            locationData.value = {
-                ip: '0.0.0.0',
-                location: '未知位置',
-                isp: '未知运营商',
-            };
-        } finally {
-            isFetching.value = false;
-        }
-    };
+      // 赋值逻辑：优先使用 location，如果没有则回退显示 IP
+      locationData.value = {
+        ip: data.ip || '未知IP',
+        location: data.location || '未知位置',
+        isp: data.isp || '未知运营商',
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    catch (error) {
+      // 这里的兜底很重要，防止前端因为接口 500 而挂掉
+      locationData.value = {
+        ip: '0.0.0.0',
+        location: '未知位置',
+        isp: '未知运营商',
+      }
+    }
+    finally {
+      isFetching.value = false
+    }
+  }
 
-    return {
-        locationData,
-        fetchGeo,
-    };
-};
+  return {
+    locationData,
+    fetchGeo,
+  }
+}

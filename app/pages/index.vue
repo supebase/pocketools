@@ -1,16 +1,22 @@
 <template>
-    <UAlert color="neutral" title="How to use" description="/api/ip" />
-    <pre v-text="locationData" />
-
-    <AnimateNumber :value="onlineCount" /> 人在线
+  <div>
+    <UAlert
+      color="neutral"
+      title="How to use"
+      description="/api/ip"
+      :ui="{ root: 'rounded-b-none' }"
+    />
+    <pre
+      class="border rounded-b-xl p-3"
+      v-text="locationData"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
-const { onlineCount, initPresence } = usePresence();
-const { locationData, fetchGeo } = useGeoLocation();
+const { locationData, fetchGeo } = useGeoLocation()
 
 onMounted(() => {
-    initPresence();
-    fetchGeo();
+  fetchGeo()
 })
 </script>

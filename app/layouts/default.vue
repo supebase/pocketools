@@ -1,5 +1,5 @@
 <template>
-    <UPageBody>
-        <slot />
-    </UPageBody>
+  <UPageBody>
+    <slot />
+  </UPageBody>
 </template>
