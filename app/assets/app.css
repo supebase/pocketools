@@ -1,0 +1,67 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+:root {
+  --ui-header-height: --spacing(16);
+}
+
+.number-column,
+.comma-column {
+  position: relative;
+  height: 1.25em;
+  transition: width var(--digit-duration) var(--ease-out-expo);
+  overflow: hidden;
+}
+
+.number-column {
+  width: 0.6em;
+  height: 1.25em;
+  overflow: hidden;
+}
+
+.comma-column {
+  width: 0.35em;
+  text-align: center;
+}
+
+.digit-cell {
+  height: 1.25em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+  padding: 0;
+  margin: 0;
+}
+
+.number-scroll {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  transition-property: transform;
+  transition-timing-function: var(--ease-out-expo);
+}
+
+.digit-enter-from {
+  opacity: 0;
+  width: 0;
+  transform: scale(0.5);
+}
+
+.digit-leave-to {
+  opacity: 0;
+  width: 0;
+  transform: translateY(0.5em);
+}
+
+.digit-leave-active {
+  position: absolute;
+  transition: all var(--digit-duration) var(--ease-out-expo);
+}
+
+.digit-enter-active {
+  transition: all var(--digit-duration) var(--ease-out-expo);
+}
+
+.digit-move {
+  transition: transform var(--digit-duration) var(--ease-out-expo);
+}

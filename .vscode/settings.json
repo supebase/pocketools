@@ -10,7 +10,7 @@
 
   // 针对 Vue 和 TS 文件显式指定（防止被其他插件抢权）
   "[vue]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "Vue.volar"
   },
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
@@ -18,5 +18,19 @@
 
   // 现代插件不再强制要求 useFlatConfig，但留着也无害
   // 如果你的插件版本非常新，删掉它是完全没问题的
-  "eslint.useFlatConfig": true
+  "eslint.useFlatConfig": true,
+
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.classAttributes": ["class", "ui"],
+  "tailwindCSS.experimental.classRegex": [
+    ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "[tailwindcss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
