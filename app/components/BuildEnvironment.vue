@@ -4,7 +4,12 @@
     class="flex items-center text-xs font-medium tracking-wide text-dimmed/80 pb-6 select-none"
   >
     <div class="flex items-center gap-2.5">
-      <span>构建于 {{ useRelativeTime(buildInfo.time) }}</span>
+      <ClientOnly>
+        <span>构建于 {{ useRelativeTime(buildInfo.time) }}</span>
+        <template #fallback>
+          <span>...</span>
+        </template>
+      </ClientOnly>
 
       <span class="opacity-70">·</span>
 

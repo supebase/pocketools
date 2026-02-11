@@ -4,7 +4,7 @@
       :toggle="false"
     >
       <template #title>
-        <CommonLogo
+        <LazyCommonLogo
           :width="32"
           :height="32"
         />
@@ -47,4 +47,9 @@
 
 <script setup lang="ts">
 const { user, isLoggedIn, logout } = useAuth()
+const { fetchGeo } = useGeoLocation();
+
+onMounted(() => {
+  fetchGeo();
+});
 </script>

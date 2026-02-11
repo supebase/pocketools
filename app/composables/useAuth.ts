@@ -4,18 +4,21 @@ export const useAuth = () => {
   const { $pb } = useNuxtApp()
 
   const user = useState<AuthRecord | null>('pb_user', () => null)
-  const isReady = ref(false)
+  const isReady = useState('pb_auth_ready', () => false)
 
-  onMounted(() => {
-    if ($pb) {
-      user.value = $pb.authStore.record as AuthRecord
+  const init = () => {
+    if (import.meta.server || !$pb || isReady.value) return
 
-      $pb.authStore.onChange((token, model) => {
-        user.value = model as AuthRecord
-      }, true)
-    }
+    // 同步获取当前状态
+    user.value = $pb.authStore.record as AuthRecord
+
+    // 监听变化
+    $pb.authStore.onChange((_token, record) => {
+      user.value = record as AuthRecord
+    }, true)
+
     isReady.value = true
-  })
+  }
 
   const logout = () => {
     $pb?.authStore.clear()
@@ -24,8 +27,9 @@ export const useAuth = () => {
 
   return {
     user,
-    isLoggedIn: computed(() => isReady.value ? !!user.value : false),
+    isLoggedIn: computed(() => !!user.value),
     isReady,
+    init,
     logout,
   }
 }
