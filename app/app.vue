@@ -47,9 +47,9 @@
 
 <script setup lang="ts">
 const { user, isLoggedIn, logout } = useAuth()
-const { fetchGeo } = useGeoLocation();
+const { fetchGeo } = useGeoLocation()
 
 onMounted(() => {
-  fetchGeo();
-});
+  fetchGeo()
+})
 </script>

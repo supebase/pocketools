@@ -14,5 +14,21 @@ export default defineAppConfig({
         overlay: 'backdrop-blur',
       },
     },
+
+    drawer: {
+      slots: {
+        overlay: 'backdrop-blur',
+        container: 'rounded-none',
+        title: 'hidden',
+        description: 'hidden',
+      },
+      compoundVariants: [
+        {
+          class: {
+            content: 'inset-y-0 right-0 rounded-none',
+          },
+        },
+      ],
+    },
   },
 })
