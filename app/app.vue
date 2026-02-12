@@ -1,5 +1,7 @@
 <template>
-  <UApp>
+  <SetupInstructions v-if="isConnected === false" />
+  
+  <UApp v-else>
     <UHeader
       :toggle="false"
     >
@@ -46,10 +48,21 @@
 </template>
 
 <script setup lang="ts">
+const { $pb } = useNuxtApp()
+const isConnected = ref<boolean | null>(null)
+
 const { user, isLoggedIn, logout } = useAuth()
 const { fetchGeo } = useGeoLocation()
 
-onMounted(() => {
+onMounted(async () => {
+  try {
+    await $pb.health.check()
+    isConnected.value = true
+  } catch (err) {
+    console.error('PocketBase connection failed:', err)
+    isConnected.value = false
+  }
+
   fetchGeo()
 })
 </script>
