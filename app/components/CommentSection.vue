@@ -2,9 +2,8 @@
   <div class="flex flex-col h-full">
     <div class="px-2 z-10 flex justify-between items-center">
       <div class="flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-neutral-900 dark:bg-white animate-pulse" />
-        <h3 class="text-xs font-medium uppercase tracking-widest text-neutral-500">
-          Comments ({{ comments.length }})
+        <h3 class="text-sm font-medium uppercase tracking-widest text-neutral-500">
+          <AnimateNumber :value="comments.length" /> 条评论
         </h3>
       </div>
     </div>
@@ -26,29 +25,25 @@
               size="sm"
               class="ring-1 ring-neutral-200 dark:ring-neutral-800 rounded-md text-[10px] font-medium"
             />
-            <input
+            <UInput
               v-model="form.identity"
               placeholder="Email or Username"
               class="flex-1 bg-transparent text-sm outline-none placeholder:text-neutral-400 dark:text-neutral-200"
-            >
+            />
           </div>
 
-          <textarea
+          <UTextarea
             v-model="form.commnet"
-            rows="3"
-            placeholder="What's on your mind?"
+            :rows="3"
+            :disabled="!isReady"
+            :placeholder="isReady ? 'What\'s on your mind?' : '休息一下，稍后再发...'"
             class="w-full bg-transparent text-sm outline-none resize-none placeholder:text-neutral-400 dark:text-neutral-200"
           />
         </div>
 
-        <div class="flex items-center justify-between px-4 py-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 rounded-b-lg">
+        <div class="flex items-center justify-between px-4 py-3">
           <div class="flex items-center gap-2">
-            <span
-              v-if="!isReady"
-              class="text-[10px] font-mono text-neutral-400 uppercase tracking-tighter"
-            >
-              等待 {{ remainingSeconds }} 秒
-            </span>
+
           </div>
 
           <UButton
@@ -57,8 +52,9 @@
             :loading="submitting"
             :disabled="!isReady || !form.commnet.trim() || !form.identity.trim()"
             @click="handleSend"
+            class="tabular-nums"
           >
-            {{ isReady ? '发表评论' : '技能冷却' }}
+          {{ isReady ? '发表评论' : `冷却中 ${remainingSeconds} 秒` }}
           </UButton>
         </div>
       </div>

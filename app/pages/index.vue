@@ -22,9 +22,7 @@
     </Transition>
 
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-lg font-bold">
-        全部动态
-      </h2>
+      <h2 class="text-lg font-bold">全部动态</h2>
       <UButton
         icon="i-heroicons-arrow-path"
         variant="ghost"
@@ -41,50 +39,40 @@
           :key="post.id"
           class="hover:ring-1 hover:ring-primary-500 transition-all"
         >
-          <template #header>
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-2">
-                <UAvatar
-                  :alt="post.expand?.user?.name"
-                  size="xs"
-                  src=""
-                />
-                <span class="font-bold text-sm">{{
-                  post.expand?.user?.name || "匿名"
-                }}</span>
-              </div>
-              <span class="text-xs text-gray-400">
-                {{ useRelativeTime(post.created) }}
-              </span>
-            </div>
-          </template>
           <p
             class="text-neutral-600 dark:text-neutral-400 leading-relaxed line-clamp-4"
           >
             {{ post.content }}
           </p>
 
-          <UDrawer
-            direction="right"
-            title="查看评论"
-            description="点击查看该动态的评论"
-            :handle="false"
-            :ui="{ content: 'w-full max-w-md h-full flex flex-col focus:outline-none',
-                   body: 'p-0 flex-1 overflow-hidden' }"
-          >
-            <UButton
-              color="neutral"
-              variant="subtle"
-              :label="`${getCommentCount(post)} 条评论`"
-            />
+          <div class="flex justify-between items-center mt-2">
+            <UDrawer
+              direction="right"
+              title="查看评论"
+              description="点击查看该动态的评论"
+              :handle="false"
+              :ui="{
+                content:
+                  'w-full max-w-md h-full flex flex-col focus:outline-none',
+                body: 'p-0 flex-1 overflow-hidden',
+              }"
+            >
+              <span class="text-xs text-muted">
+                {{ getCommentCount(post) }} 条评论
+              </span>
 
-            <template #body>
-              <CommentSection
-                :post-id="post.id"
-                class="h-full flex flex-col"
-              />
-            </template>
-          </UDrawer>
+              <template #body>
+                <CommentSection
+                  :post-id="post.id"
+                  class="h-full flex flex-col"
+                />
+              </template>
+            </UDrawer>
+
+            <span class="text-xs text-muted">
+              {{ useRelativeTime(post.created) }}
+            </span>
+          </div>
         </UCard>
 
         <div class="pt-6">
@@ -97,10 +85,7 @@
           >
             加载更多内容
           </UButton>
-          <div
-            v-else
-            class="flex flex-col items-center gap-2 opacity-50 py-4"
-          >
+          <div v-else class="flex flex-col items-center gap-2 opacity-50 py-4">
             <USeparator label="End" />
             <span class="text-xs">你已经看完了所有动态</span>
           </div>
@@ -119,14 +104,14 @@ const {
   loadMore,
   reset,
   applyPendingPosts,
-} = usePosts()
+} = usePosts();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getCommentCount(post: any) {
   // 从 expand 中获取初始评论（如果在 PB 配置了反向关系）
-  const initialComments = post.expand?.comments_via_post || []
-  const { comments } = useComments(post.id, initialComments)
-  return comments.value.length
+  const initialComments = post.expand?.comments_via_post || [];
+  const { comments } = useComments(post.id, initialComments);
+  return comments.value.length;
 }
 </script>
 

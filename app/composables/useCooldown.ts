@@ -1,32 +1,47 @@
 import { useStorage, useIntervalFn } from '@vueuse/core'
 
-export const useCooldown = (key: string, duration = 30) => {
-  const expiresAt = useStorage<number>(`cd_timestamp_${key}`, 0)
+// 定义存储结构：{ [postId]: expiresAt }
+const COOLDOWN_STORAGE_KEY = 'app_cooldown_registry'
+
+export const useCooldown = (id: string, duration = 30) => {
+  // 所有组件共享同一个存储对象
+  const registry = useStorage<Record<string, number>>(COOLDOWN_STORAGE_KEY, {})
+
   const remainingSeconds = ref(0)
 
-  // 计算剩余秒数的函数
   const updateRemaining = () => {
-    const diff = Math.ceil((expiresAt.value - Date.now()) / 1000)
+    const expiresAt = registry.value[id] || 0
+    const diff = Math.ceil((expiresAt - Date.now()) / 1000)
     remainingSeconds.value = Math.max(0, diff)
   }
 
-  // 每秒执行一次
   const { pause, resume } = useIntervalFn(updateRemaining, 1000, {
     immediate: true,
     immediateCallback: true,
   })
 
-  // 开始冷却
   const startCooldown = () => {
-    expiresAt.value = Date.now() + duration * 1000
+    // 局部更新对象中的某个 key
+    registry.value = {
+      ...registry.value,
+      [id]: Date.now() + duration * 1000
+    }
     updateRemaining()
     resume()
   }
 
-  // 监听剩余时间，如果归零则停止定时器节省资源
   watch(remainingSeconds, (val) => {
-    if (val <= 0) pause()
-    else resume()
+    if (val <= 0) {
+      pause()
+      // 如果冷却结束，从 registry 中删除该项以保持对象精简
+      if (registry.value[id]) {
+        const newRegistry = { ...registry.value }
+        delete newRegistry[id]
+        registry.value = newRegistry
+      }
+    } else {
+      resume()
+    }
   }, { immediate: true })
 
   return {

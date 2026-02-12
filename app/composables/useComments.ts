@@ -3,7 +3,13 @@ import type { Comments } from '~/types'
 export const useComments = (postId: string, initialData?: Comments[]) => {
   const { $pb } = useNuxtApp()
 
-  const comments = useState<Comments[]>(`comments_${postId}`, () => initialData || [])
+  const comments = useState<Comments[]>(`comments_${postId}`, () => {
+    if (!initialData) return []
+    return [...initialData].sort((a, b) =>
+      new Date(b.created).getTime() - new Date(a.created).getTime()
+    )
+  })
+
   const loading = ref(false)
 
   const fetchComments = async () => {
