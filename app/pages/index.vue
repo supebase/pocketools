@@ -1,6 +1,6 @@
 <template>
   <UContainer class="py-8 relative">
-    <Transition
+    <!-- <Transition
       enter-active-class="transition duration-300 ease-out"
       enter-from-class="transform -translate-y-4 opacity-0"
       enter-to-class="transform translate-y-0 opacity-100"
@@ -91,32 +91,34 @@
           </div>
         </div>
       </div>
-    </ClientOnly>
+    </ClientOnly> -->
+
+    <PostEditor />
   </UContainer>
 </template>
 
 <script setup lang="ts">
-const {
-  posts,
-  pendingPosts,
-  hasMore,
-  loading,
-  loadMore,
-  reset,
-  applyPendingPosts,
-} = usePosts();
+// const {
+//   posts,
+//   pendingPosts,
+//   hasMore,
+//   loading,
+//   loadMore,
+//   reset,
+//   applyPendingPosts,
+// } = usePosts();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getCommentCount(post: any) {
-  // 从 expand 中获取初始评论（如果在 PB 配置了反向关系）
-  const initialComments = post.expand?.comments_via_post || [];
-  const { comments } = useComments(post.id, initialComments);
-  return comments.value.length;
-}
+// // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// function getCommentCount(post: any) {
+//   // 从 expand 中获取初始评论（如果在 PB 配置了反向关系）
+//   const initialComments = post.expand?.comments_via_post || [];
+//   const { comments } = useComments(post.id, initialComments);
+//   return comments.value.length;
+// }
 </script>
 
 <style>
-@keyframes bounce-subtle {
+/* @keyframes bounce-subtle {
   0%,
   100% {
     transform: translateY(0);
@@ -127,5 +129,5 @@ function getCommentCount(post: any) {
 }
 .animate-bounce-subtle {
   animation: bounce-subtle 2s infinite ease-in-out;
-}
+} */
 </style>
